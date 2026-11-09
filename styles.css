@@ -404,7 +404,8 @@ button, a { -webkit-tap-highlight-color: transparent; }
   .hero__visual[data-parallax], .interlude__backdrop { transform: none; }
 }
 @media (prefers-reduced-motion: reduce) {
-  .media-video { display: none; }
+  /* O vídeo fica pausado por padrão; controles manuais continuam disponíveis. */
+  .media-video { transition: none; }
 }
 
 
