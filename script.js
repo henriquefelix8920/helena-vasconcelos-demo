@@ -1,0 +1,219 @@
+(() => {
+  "use strict";
+
+  // Dados de contato ficam vazios neste projeto conceitual.
+  // Quando houver uma profissional real, configure os canais autorizados aqui.
+  const CONTACT = {
+    email: "",
+    whatsapp: ""
+  };
+
+  const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  const header = document.querySelector("[data-header]");
+  const menuToggle = document.querySelector("[data-menu-toggle]");
+  const nav = document.querySelector("[data-nav]");
+  const navLinks = [...document.querySelectorAll("[data-nav] a")];
+
+  // Ano do rodapé.
+  const year = document.querySelector("[data-year]");
+  if (year) year.textContent = new Date().getFullYear();
+
+  // Cabeçalho acompanha a rolagem sem alterar o fluxo da página.
+  const updateHeader = () => {
+    if (!header) return;
+    header.classList.toggle("is-scrolled", window.scrollY > 36);
+  };
+  updateHeader();
+  window.addEventListener("scroll", updateHeader, { passive: true });
+
+  // Menu móvel acessível por toque, teclado e tecla Escape.
+  const closeMenu = () => {
+    if (!menuToggle || !nav) return;
+    menuToggle.setAttribute("aria-expanded", "false");
+    menuToggle.setAttribute("aria-label", "Abrir menu");
+    nav.classList.remove("is-open");
+    document.body.classList.remove("menu-open");
+  };
+
+  if (menuToggle && nav) {
+    menuToggle.addEventListener("click", () => {
+      const isOpen = menuToggle.getAttribute("aria-expanded") === "true";
+      menuToggle.setAttribute("aria-expanded", String(!isOpen));
+      menuToggle.setAttribute("aria-label", isOpen ? "Abrir menu" : "Fechar menu");
+      nav.classList.toggle("is-open", !isOpen);
+      document.body.classList.toggle("menu-open", !isOpen);
+    });
+
+    navLinks.forEach((link) => link.addEventListener("click", closeMenu));
+    document.addEventListener("keydown", (event) => {
+      if (event.key === "Escape") closeMenu();
+    });
+    document.addEventListener("click", (event) => {
+      if (
+        nav.classList.contains("is-open") &&
+        !nav.contains(event.target) &&
+        !menuToggle.contains(event.target)
+      ) closeMenu();
+    });
+  }
+
+  // Revelações suaves: o conteúdo continua visível quando movimento reduzido é solicitado.
+  const revealItems = document.querySelectorAll("[data-reveal]");
+  if (prefersReducedMotion || !("IntersectionObserver" in window)) {
+    revealItems.forEach((item) => item.classList.add("is-visible"));
+  } else {
+    const revealObserver = new IntersectionObserver((entries, observer) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add("is-visible");
+          observer.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.14, rootMargin: "0px 0px -45px 0px" });
+
+    revealItems.forEach((item) => revealObserver.observe(item));
+  }
+
+  // Imagens reais substituem os cenários gráficos assim que forem adicionadas ao repositório.
+  document.querySelectorAll(".media-frame img").forEach((image) => {
+    const frame = image.closest(".media-frame");
+    if (!frame) return;
+
+    const markLoaded = () => frame.classList.add("media-loaded");
+    const markMissing = () => frame.classList.add("media-missing");
+
+    if (image.complete) {
+      if (image.naturalWidth > 0) markLoaded();
+      else markMissing();
+    } else {
+      image.addEventListener("load", markLoaded, { once: true });
+      image.addEventListener("error", markMissing, { once: true });
+    }
+  });
+
+  // Vídeos são opcionais. O fundo editorial permanece visível caso o arquivo ainda não exista.
+  document.querySelectorAll("[data-video]").forEach((video) => {
+    video.addEventListener("loadeddata", () => video.closest(".media-frame")?.classList.add("media-loaded"));
+    video.addEventListener("error", () => video.closest(".media-frame")?.classList.add("media-missing"));
+    if (!prefersReducedMotion) {
+      const playWhenVisible = new IntersectionObserver((entries, observer) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            video.play().catch(() => {});
+          } else {
+            video.pause();
+          }
+        });
+      }, { threshold: 0.2 });
+      playWhenVisible.observe(video);
+    }
+  });
+
+  // Parallax discreto apenas em telas com ponteiro preciso e quando o usuário permite movimento.
+  const parallaxItems = [...document.querySelectorAll("[data-parallax]")];
+  const hasFinePointer = window.matchMedia("(pointer: fine)").matches;
+  if (!prefersReducedMotion && hasFinePointer && parallaxItems.length) {
+    let ticking = false;
+    const updateParallax = () => {
+      const viewportHeight = window.innerHeight || 1;
+      parallaxItems.forEach((element) => {
+        const speed = Number(element.dataset.parallax || 0.08);
+        const rect = element.getBoundingClientRect();
+        const centerOffset = (rect.top + rect.height / 2 - viewportHeight / 2) * speed;
+        element.style.setProperty("--parallax-y", Math.max(-35, Math.min(35, centerOffset)) + "px");
+      });
+      ticking = false;
+    };
+    const requestParallax = () => {
+      if (!ticking) {
+        window.requestAnimationFrame(updateParallax);
+        ticking = true;
+      }
+    };
+    window.addEventListener("scroll", requestParallax, { passive: true });
+    window.addEventListener("resize", requestParallax);
+    updateParallax();
+  }
+
+  // Destaque da navegação conforme a seção visível.
+  const observedSections = navLinks
+    .map((link) => document.querySelector(link.getAttribute("href")))
+    .filter(Boolean);
+
+  if ("IntersectionObserver" in window && observedSections.length) {
+    const sectionObserver = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (!entry.isIntersecting) return;
+        const activeId = "#" + entry.target.id;
+        navLinks.forEach((link) => {
+          const active = link.getAttribute("href") === activeId;
+          if (active) link.setAttribute("aria-current", "location");
+          else link.removeAttribute("aria-current");
+          link.classList.toggle("is-active", active);
+        });
+      });
+    }, { rootMargin: "-38% 0px -52% 0px", threshold: 0 });
+    observedSections.forEach((section) => sectionObserver.observe(section));
+  }
+
+  // Linha da jornada avança quando a seção entra em cena.
+  const journey = document.querySelector("[data-journey]");
+  if (journey && "IntersectionObserver" in window && !prefersReducedMotion) {
+    const journeyObserver = new IntersectionObserver((entries) => {
+      if (entries.some((entry) => entry.isIntersecting)) {
+        journey.classList.add("is-visible");
+        journeyObserver.disconnect();
+      }
+    }, { threshold: 0.2 });
+    journeyObserver.observe(journey);
+  } else {
+    journey?.classList.add("is-visible");
+  }
+
+  // FAQ: mantém uma resposta aberta por vez para facilitar a leitura.
+  const faq = document.querySelector("[data-faq]");
+  if (faq) {
+    faq.addEventListener("toggle", (event) => {
+      const current = event.target;
+      if (!(current instanceof HTMLDetailsElement) || !current.open) return;
+      faq.querySelectorAll("details[open]").forEach((item) => {
+        if (item !== current) item.open = false;
+      });
+    }, true);
+  }
+
+  // CTA de contato: só abre um canal quando um endereço real tiver sido configurado.
+  const contactLink = document.querySelector("[data-contact-link]");
+  if (contactLink) {
+    if (CONTACT.whatsapp) {
+      contactLink.href = "https://wa.me/" + CONTACT.whatsapp.replace(/\D/g, "");
+      contactLink.target = "_blank";
+      contactLink.rel = "noopener noreferrer";
+    } else if (CONTACT.email) {
+      contactLink.href = "mailto:" + CONTACT.email;
+    } else {
+      contactLink.href = "#contato";
+      contactLink.addEventListener("click", (event) => {
+        event.preventDefault();
+        showNotice("Este é um projeto demonstrativo. O canal de contato será configurado com os dados autorizados da profissional.");
+      });
+    }
+  }
+
+  let noticeTimer;
+  function showNotice(message) {
+    let notice = document.querySelector("[data-site-notice]");
+    if (!notice) {
+      notice = document.createElement("div");
+      notice.className = "site-notice";
+      notice.dataset.siteNotice = "";
+      notice.setAttribute("role", "status");
+      notice.setAttribute("aria-live", "polite");
+      document.body.appendChild(notice);
+    }
+    notice.textContent = message;
+    notice.classList.add("is-visible");
+    window.clearTimeout(noticeTimer);
+    noticeTimer = window.setTimeout(() => notice.classList.remove("is-visible"), 4200);
+  }
+})();
