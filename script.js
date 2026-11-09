@@ -81,12 +81,22 @@
 
     const markLoaded = () => frame.classList.add("media-loaded");
     const markMissing = () => frame.classList.add("media-missing");
+    const decodeAndReveal = () => {
+      if (typeof image.decode === "function") {
+        image.decode().then(markLoaded).catch(() => {
+          if (image.naturalWidth > 0) markLoaded();
+          else markMissing();
+        });
+      } else {
+        markLoaded();
+      }
+    };
 
     if (image.complete) {
-      if (image.naturalWidth > 0) markLoaded();
+      if (image.naturalWidth > 0) decodeAndReveal();
       else markMissing();
     } else {
-      image.addEventListener("load", markLoaded, { once: true });
+      image.addEventListener("load", decodeAndReveal, { once: true });
       image.addEventListener("error", markMissing, { once: true });
     }
   });
@@ -223,17 +233,23 @@
   updateChapterRailVisibility();
   window.addEventListener("scroll", updateChapterRailVisibility, { passive: true });
 
+  let chapterSwitchTimer = null;
   const setCurrentChapter = (section) => {
     if (!chapterRail || !chapterNumber || !chapterName || !section) return;
     const nextNumber = section.dataset.chapter || "01";
     const nextName = section.dataset.chapterName || "Abertura";
-    if (chapterNumber.textContent === nextNumber) return;
+    const nextTone = section.dataset.tone || "light";
+    if (chapterNumber.textContent === nextNumber) {
+      chapterRail.dataset.tone = nextTone;
+      return;
+    }
 
+    window.clearTimeout(chapterSwitchTimer);
     chapterRail.classList.add("is-switching");
-    window.setTimeout(() => {
+    chapterSwitchTimer = window.setTimeout(() => {
       chapterNumber.textContent = nextNumber;
       chapterName.textContent = nextName;
-      chapterRail.dataset.tone = section.dataset.tone || "light";
+      chapterRail.dataset.tone = nextTone;
       chapterRail.classList.remove("is-switching");
     }, 150);
   };
