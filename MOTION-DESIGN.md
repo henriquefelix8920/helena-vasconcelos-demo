@@ -57,3 +57,18 @@ Os arquivos HTML, CSS e JavaScript foram consultados no GitHub. O JavaScript pas
 - Um botão acessível "Reproduzir cena" aparece para permitir tentativa manual.
 - Se o usuário tiver preferência de movimento reduzido, o vídeo começa pausado, mas a reprodução manual continua disponível.
 - Se uma primeira tentativa falhar e uma tentativa posterior funcionar, o estado de erro é removido para que o vídeo possa aparecer.
+
+
+## Atualização — cadência editorial das sequências
+
+- Etapas do método, jornada e perguntas frequentes agora entram em sequência curta, em vez de surgirem todas ao mesmo tempo.
+- A cadência é progressiva e discreta; o primeiro elemento não recebe atraso.
+- A preferência por movimento reduzido continua prevalecendo e mantém o conteúdo imediatamente visível.
+
+## Verificação dos arquivos de mídia — 9 de novembro de 2026
+
+- Os quatro nomes de imagem usados no HTML correspondem exatamente aos arquivos existentes em `assets/images/`.
+- Os dois nomes de vídeo usados no HTML correspondem exatamente aos arquivos existentes em `assets/videos/`.
+- As seis URLs públicas testadas na produção responderam HTTP 200. Portanto, não há evidência de erro de caminho ou de nome de arquivo.
+- As imagens PNG têm aproximadamente 8,2–8,8 MB cada. Esse peso pode causar demora perceptível ou falha intermitente em conexões lentas e aparelhos com pouca memória; otimizar para WebP e gerar versões responsivas será uma etapa própria, quando os materiais finais forem escolhidos.
+- A disponibilidade HTTP confirma que os arquivos são servidos, mas não comprova a reprodução visual em todos os navegadores. O vídeo pode depender de codec compatível e de interação do visitante; os controles manuais e o poster/fallback permanecem disponíveis.
