@@ -569,7 +569,6 @@ button, a { -webkit-tap-highlight-color: transparent; }
 }
 
 .media-frame.media-video-error .media-video { display: none; }
-.media-frame.media-video-error > .media-art { opacity: 0; }
 .media-frame.media-video-error > img { opacity: 1; }
 .media-video { background: #555b48; }
 
