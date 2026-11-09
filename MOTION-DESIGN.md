@@ -22,7 +22,8 @@
 
 ## Próximas possibilidades (ainda não implementadas)
 
-- Transições narrativas entre capítulos usando fundos e tipografia, sem bloquear o scroll.
+- Indicador editorial fixo que troca número, nome e contraste conforme o capítulo ativo, sem bloquear o scroll.
+- Identificação de nove momentos narrativos, da abertura ao convite final.
 - Stagger mais refinado para pequenos elementos de texto e números.
 - Profundidade em múltiplas camadas de imagem, quando os materiais definitivos estiverem aprovados.
 - Vídeo com poster correto, preload seletivo e tratamento de falha.
@@ -31,3 +32,13 @@
 ## Nota de QA
 
 Os arquivos HTML, CSS e JavaScript foram consultados no GitHub. O JavaScript passou por verificação de sintaxe no ambiente de edição; o CSS apresentou balanço de chaves correto. A versão publicada e os arquivos CSS/JS responderam HTTP 200. Uma inspeção visual automatizada em navegadores de diferentes tamanhos ainda não foi executada.
+
+
+## Diagnóstico de mídia — 9 de novembro de 2026
+
+- Os quatro caminhos de imagem usados no HTML existem em `assets/images/` e respondem HTTP 200 com `image/png`.
+- Os dois caminhos de vídeo usados no HTML existem em `assets/videos/` e respondem HTTP 200 com `video/mp4`.
+- Todas as quatro imagens PNG fornecidas medem 2813 × 1536 px e pesam aproximadamente 8,2–8,8 MB. O formato é paisagem, embora os blocos de retrato do site tenham moldura vertical; o enquadramento pode cortar partes da composição. Converter para WebP com qualidade visual alta e criar recortes apropriados reduzirá tempo de carregamento.
+- O arquivo `hero-portrait.png` duplicado na raiz do repositório foi removido. A cópia canônica em `assets/images/hero-portrait.png` permanece.
+- O carregamento de vídeo foi alterado para iniciar apenas próximo da viewport; ao falhar, a imagem/poster continua como fallback. Com `prefers-reduced-motion`, o vídeo permanece estático para respeitar a preferência do usuário.
+- Os nomes e URLs foram verificados, mas ainda não houve inspeção visual em aparelhos físicos; a causa específica de eventuais falhas vistas no Chromebook ainda não está confirmada.
