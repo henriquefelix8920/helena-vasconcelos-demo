@@ -22,7 +22,7 @@ Produza primeiro o retrato-base. Só depois use esse retrato como referência pa
 
 ## Foto 01 — Retrato-base e hero
 
-**Arquivo esperado no site:** `assets/images/hero-portrait.webp`  
+**Arquivo esperado no site:** `assets/images/hero-portrait.png`  
 **Proporção:** vertical 4:5 (ou 3:4, se 4:5 não estiver disponível).  
 **Tamanho sugerido:** 1600 × 2000 px ou maior.
 
@@ -36,7 +36,7 @@ Create a photorealistic high-end editorial portrait of the SAME fictional Brazil
 
 ## Foto 02 — Manifesto e alimentação
 
-**Arquivo esperado no site:** `assets/images/manifesto-food.webp`  
+**Arquivo esperado no site:** `assets/images/manifesto-food.png`  
 **Proporção:** horizontal 16:9.  
 **Tamanho sugerido:** 2000 × 1125 px.
 
@@ -46,7 +46,7 @@ A photorealistic luxury editorial food photograph for a sophisticated nutrition 
 
 ## Foto 03 — Movimento / poster da seção de vida real
 
-**Arquivo esperado no site:** `assets/images/movement-still.webp`  
+**Arquivo esperado no site:** `assets/images/movement-still.png`  
 **Proporção:** horizontal 16:9.  
 **Tamanho sugerido:** 2000 × 1125 px.
 
@@ -56,7 +56,7 @@ A cinematic photorealistic editorial lifestyle photograph featuring the SAME fic
 
 ## Foto 04 — Retrato da seção Sobre
 
-**Arquivo esperado no site:** `assets/images/about-portrait.webp`  
+**Arquivo esperado no site:** `assets/images/about-portrait.png`  
 **Proporção:** vertical 4:5 (ou 3:4).  
 **Tamanho sugerido:** 1600 × 2000 px ou maior.
 
