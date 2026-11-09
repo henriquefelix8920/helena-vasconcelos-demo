@@ -57,7 +57,15 @@
     });
   }
 
-  // Revelações suaves: o conteúdo continua visível quando movimento reduzido é solicitado.
+  // Revelações suaves: pequenos grupos entram em sequência, sem atrasar o primeiro item.
+  document.querySelectorAll("[data-stagger]").forEach((group) => {
+    const interval = Math.max(0, Number(group.dataset.stagger) || 90);
+    [...group.children].filter((item) => item.matches("[data-reveal]")).forEach((item, index) => {
+      item.style.transitionDelay = (index * interval) + "ms";
+    });
+  });
+
+  // O conteúdo continua visível quando movimento reduzido é solicitado.
   const revealItems = document.querySelectorAll("[data-reveal]");
   if (prefersReducedMotion || !("IntersectionObserver" in window)) {
     revealItems.forEach((item) => item.classList.add("is-visible"));
