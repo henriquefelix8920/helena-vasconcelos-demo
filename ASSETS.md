@@ -6,10 +6,10 @@ Todos os arquivos desta lista são materiais de produção a serem adicionados p
 
 | Arquivo | Onde aparece | Direção visual |
 |---|---|---|
-| `assets/images/hero-portrait.webp` | Retrato principal da abertura | Retrato horizontal/vertical amplo, mulher adulta fictícia em consultório contemporâneo, blazer marfim, luz natural lateral, paleta oliva e areia, expressão acolhedora e segura. |
-| `assets/images/manifesto-food.webp` | Seção “A alimentação precisa caber na vida” | Fotografia editorial de ingredientes frescos e mesa natural, detalhes de textura, luz lateral quente, composição ampla. |
-| `assets/images/movement-still.webp` | Fundo da seção “Saúde também acontece na vida real” | Cena de movimento leve e cotidiano, luz da manhã, ambiente natural, enquadramento cinematográfico horizontal. |
-| `assets/images/about-portrait.webp` | Apresentação de Helena | Retrato editorial da mesma personagem do hero, mesma aparência, cabelo, idade aparente e direção de fotografia. |
+| `assets/images/hero-portrait.png` | Retrato principal da abertura | Retrato horizontal/vertical amplo, mulher adulta fictícia em consultório contemporâneo, blazer marfim, luz natural lateral, paleta oliva e areia, expressão acolhedora e segura. |
+| `assets/images/manifesto-food.png` | Seção “A alimentação precisa caber na vida” | Fotografia editorial de ingredientes frescos e mesa natural, detalhes de textura, luz lateral quente, composição ampla. |
+| `assets/images/movement-still.png` | Fundo da seção “Saúde também acontece na vida real” | Cena de movimento leve e cotidiano, luz da manhã, ambiente natural, enquadramento cinematográfico horizontal. |
+| `assets/images/about-portrait.png` | Apresentação de Helena | Retrato editorial da mesma personagem do hero, mesma aparência, cabelo, idade aparente e direção de fotografia. |
 
 **Consistência da personagem:** utilizar sempre a mesma imagem de referência aprovada para manter rosto, cabelo, tom de pele, idade aparente e identidade visual. Helena é fictícia.
 
