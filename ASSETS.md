@@ -42,3 +42,16 @@ Os caminhos já estão previstos no projeto. Quando a etapa audiovisual começar
 ## Direitos e transparência
 
 Use imagens e vídeos gerados especificamente para a personagem fictícia ou devidamente licenciados. Não utilize a aparência de uma nutricionista real sem autorização expressa. Não simule depoimentos, pacientes reais, resultados clínicos ou recomendações médicas.
+
+
+## Se a ferramenta gerar PNG ou JPG
+
+Não troque a extensão manualmente. Um arquivo PNG precisa continuar com extensão `.png`; JPG precisa continuar `.jpg`. O HTML pode ser atualizado para apontar para qualquer extensão. Exemplo: se a imagem oficial sair em PNG, envie como `assets/images/hero-portrait.png` e me avise; eu atualizo o caminho do site. A mesma regra vale para as outras imagens e vídeos.
+
+**Para a primeira imagem:** como o gerador do Qwen entregou PNG, salve o arquivo como `hero-portrait.png` dentro de `assets/images/`. Não precisa anexar na conversa: depois que o arquivo estiver no GitHub, eu consigo consultar o material pelo site/repositório.
+
+**Ordem das próximas imagens:**
+1. Produza a foto de alimentação sem referência de rosto.
+2. Produza a foto de movimento usando o retrato oficial de Helena como referência.
+3. Produza a foto da seção Sobre usando exatamente a mesma referência do retrato oficial.
+4. Envie as imagens para `assets/images/` com seus nomes-base correspondentes; mantenha a extensão real do arquivo.
