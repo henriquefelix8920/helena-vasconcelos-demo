@@ -666,13 +666,13 @@ button, a { -webkit-tap-highlight-color: transparent; }
 }
 
 
-/* Controle acessível aparece somente quando o navegador pede reprodução manual. */
+/* Controle sempre disponível até o vídeo começar; assim falhas de autoplay não escondem a ação. */
 .media-playback {
   position: absolute;
   z-index: 6;
   left: 1.15rem;
   bottom: 1.15rem;
-  display: none;
+  display: inline-flex;
   align-items: center;
   gap: 1rem;
   min-height: 2.7rem;
@@ -689,6 +689,7 @@ button, a { -webkit-tap-highlight-color: transparent; }
 }
 .media-playback b { color: var(--bronze); font-size: .95rem; font-weight: 400; }
 .media-playback:hover { transform: translateY(-2px); background: rgba(29,36,29,.94); border-color: var(--bronze); }
+.media-playback:focus-visible { outline: 2px solid var(--paper); outline-offset: 3px; }
 .media-frame.media-video-error .media-playback,
 .media-frame.media-video-paused .media-playback { display: inline-flex; }
 .media-frame.video-loaded .media-playback { display: none; }
