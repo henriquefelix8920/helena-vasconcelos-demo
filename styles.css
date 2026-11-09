@@ -838,3 +838,32 @@ button, a { -webkit-tap-highlight-color: transparent; }
   .method-step:hover { padding-left: 0; padding-right: 0; }
   .manifesto__image:hover .media-art, .about__visual:hover .media-art { transform: none; }
 }
+
+
+/* Ajuste fino mobile: reserva uma faixa exclusiva para o convite de rolagem. */
+@media (max-width: 520px) {
+  .hero {
+    min-height: max(60rem, 112svh);
+  }
+  .hero__copy {
+    padding-bottom: 5.5rem;
+  }
+  .hero__actions {
+    gap: 1.1rem;
+  }
+  .hero__footer {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    bottom: max(1rem, env(safe-area-inset-bottom));
+    min-height: 2.5rem;
+  }
+  .hero__location,
+  .hero__chapter {
+    display: none;
+  }
+  .scroll-cue {
+    justify-content: center;
+    padding: .35rem .5rem;
+  }
+}
