@@ -106,10 +106,17 @@
   const videos = [...document.querySelectorAll("[data-video]")];
   videos.forEach((video) => {
     const frame = video.closest(".media-frame");
-    const revealVideo = () => frame?.classList.add("video-loaded");
+    const revealVideo = () => {
+      if (!frame) return;
+      // Se uma tentativa anterior falhou (rede/autoplay), uma reprodução posterior
+      // precisa remover o estado de erro para que o vídeo possa voltar a aparecer.
+      frame.classList.remove("media-video-error");
+      frame.classList.add("video-loaded");
+    };
     const restoreFallback = () => {
       frame?.classList.remove("video-loaded");
       frame?.classList.add("media-video-error");
+      video.pause();
     };
 
     video.muted = true;
@@ -225,6 +232,7 @@
   const chapterNumber = document.querySelector("[data-current-chapter]");
   const chapterName = document.querySelector("[data-current-chapter-name]");
   const chapters = [...document.querySelectorAll("[data-chapter]")];
+  const chapterLinks = [...document.querySelectorAll("[data-chapter-link]")];
 
   const updateChapterRailVisibility = () => {
     if (!chapterRail) return;
@@ -239,17 +247,23 @@
     const nextNumber = section.dataset.chapter || "01";
     const nextName = section.dataset.chapterName || "Abertura";
     const nextTone = section.dataset.tone || "light";
-    if (chapterNumber.textContent === nextNumber) {
-      chapterRail.dataset.tone = nextTone;
-      return;
-    }
+    // O cabeçalho e o marcador acompanham a atmosfera clara/escura de cada capítulo.
+    chapterRail.dataset.tone = nextTone;
+    if (header) header.dataset.tone = nextTone;
+    chapterLinks.forEach((link) => {
+      const active = link.dataset.chapterLink === nextNumber;
+      if (active) link.setAttribute("aria-current", "step");
+      else link.removeAttribute("aria-current");
+      link.classList.toggle("is-active", active);
+    });
+
+    if (chapterNumber.textContent === nextNumber) return;
 
     window.clearTimeout(chapterSwitchTimer);
     chapterRail.classList.add("is-switching");
     chapterSwitchTimer = window.setTimeout(() => {
       chapterNumber.textContent = nextNumber;
       chapterName.textContent = nextName;
-      chapterRail.dataset.tone = nextTone;
       chapterRail.classList.remove("is-switching");
     }, 150);
   };
