@@ -158,6 +158,13 @@
       return;
     }
 
+    // Em telas compactas, economize dados e bateria: reproduza somente após toque.
+    if (window.matchMedia("(max-width: 820px)").matches) {
+      video.pause();
+      frame?.classList.add("media-video-paused");
+      return;
+    }
+
     const startVideo = () => {
       if (video.readyState === 0) {
         video.preload = "auto";
