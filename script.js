@@ -93,7 +93,7 @@
 
   // Vídeos são opcionais. O fundo editorial permanece visível caso o arquivo ainda não exista.
   document.querySelectorAll("[data-video]").forEach((video) => {
-    video.addEventListener("loadeddata", () => video.closest(".media-frame")?.classList.add("media-loaded"));
+    video.addEventListener("loadeddata", () => video.closest(".media-frame")?.classList.add("video-loaded"));
     video.addEventListener("error", () => video.closest(".media-frame")?.classList.add("media-missing"));
     if (!prefersReducedMotion) {
       const playWhenVisible = new IntersectionObserver((entries, observer) => {
