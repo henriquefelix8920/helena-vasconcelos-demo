@@ -110,6 +110,25 @@
   });
 
   // Parallax discreto apenas em telas com ponteiro preciso e quando o usuário permite movimento.
+  // Indicador de leitura: acompanha a posição real da página, sem prender o scroll.
+  const progressBar = document.querySelector("[data-scroll-progress]");
+  let progressTicking = false;
+  const updateScrollProgress = () => {
+    if (!progressBar) return;
+    const scrollable = document.documentElement.scrollHeight - window.innerHeight;
+    const progress = scrollable > 0 ? Math.min(1, Math.max(0, window.scrollY / scrollable)) : 0;
+    progressBar.style.transform = "scaleX(" + progress + ")";
+    progressTicking = false;
+  };
+  const requestScrollProgress = () => {
+    if (progressTicking) return;
+    window.requestAnimationFrame(updateScrollProgress);
+    progressTicking = true;
+  };
+  updateScrollProgress();
+  window.addEventListener("scroll", requestScrollProgress, { passive: true });
+  window.addEventListener("resize", requestScrollProgress);
+
   const parallaxItems = [...document.querySelectorAll("[data-parallax]")];
   const hasFinePointer = window.matchMedia("(pointer: fine)").matches;
   if (!prefersReducedMotion && hasFinePointer && parallaxItems.length) {
