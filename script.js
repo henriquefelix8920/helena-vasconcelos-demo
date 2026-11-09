@@ -91,21 +91,56 @@
     }
   });
 
-  // Vídeos são opcionais. O fundo editorial permanece visível caso o arquivo ainda não exista.
-  document.querySelectorAll("[data-video]").forEach((video) => {
-    video.addEventListener("loadeddata", () => video.closest(".media-frame")?.classList.add("video-loaded"));
-    video.addEventListener("error", () => video.closest(".media-frame")?.classList.add("media-missing"));
-    if (!prefersReducedMotion) {
-      const playWhenVisible = new IntersectionObserver((entries, observer) => {
+  // Vídeos: carrega somente perto da viewport, mostra a primeira imagem válida
+  // e mantém o poster/fallback quando o navegador não consegue reproduzir o MP4.
+  const videos = [...document.querySelectorAll("[data-video]")];
+  videos.forEach((video) => {
+    const frame = video.closest(".media-frame");
+    const revealVideo = () => frame?.classList.add("video-loaded");
+    const restoreFallback = () => {
+      frame?.classList.remove("video-loaded");
+      frame?.classList.add("media-video-error");
+    };
+
+    video.muted = true;
+    video.defaultMuted = true;
+    video.playsInline = true;
+    video.addEventListener("loadeddata", revealVideo, { once: true });
+    video.addEventListener("playing", revealVideo);
+    video.addEventListener("error", restoreFallback);
+    video.addEventListener("abort", restoreFallback);
+
+    if (prefersReducedMotion) {
+      // Com movimento reduzido, a imagem de poster permanece estática.
+      video.pause();
+      return;
+    }
+
+    const startVideo = () => {
+      if (video.readyState === 0) {
+        video.preload = "auto";
+        video.load();
+      }
+      const attemptPlayback = () => {
+        video.play().then(revealVideo).catch(() => restoreFallback());
+      };
+      if (video.readyState >= 2) attemptPlayback();
+      else video.addEventListener("canplay", attemptPlayback, { once: true });
+    };
+
+    if ("IntersectionObserver" in window) {
+      const videoObserver = new IntersectionObserver((entries) => {
         entries.forEach((entry) => {
           if (entry.isIntersecting) {
-            video.play().catch(() => {});
+            startVideo();
           } else {
             video.pause();
           }
         });
-      }, { threshold: 0.2 });
-      playWhenVisible.observe(video);
+      }, { threshold: 0.01, rootMargin: "220px 0px" });
+      videoObserver.observe(video);
+    } else {
+      startVideo();
     }
   });
 
@@ -173,6 +208,44 @@
       });
     }, { rootMargin: "-38% 0px -52% 0px", threshold: 0 });
     observedSections.forEach((section) => sectionObserver.observe(section));
+  }
+
+  // Indicador de capítulos: identifica a cena atual sem controlar ou prender a rolagem.
+  const chapterRail = document.querySelector("[data-chapter-rail]");
+  const chapterNumber = document.querySelector("[data-current-chapter]");
+  const chapterName = document.querySelector("[data-current-chapter-name]");
+  const chapters = [...document.querySelectorAll("[data-chapter]")];
+
+  const updateChapterRailVisibility = () => {
+    if (!chapterRail) return;
+    chapterRail.classList.toggle("is-visible", window.scrollY > Math.min(260, window.innerHeight * 0.35));
+  };
+  updateChapterRailVisibility();
+  window.addEventListener("scroll", updateChapterRailVisibility, { passive: true });
+
+  const setCurrentChapter = (section) => {
+    if (!chapterRail || !chapterNumber || !chapterName || !section) return;
+    const nextNumber = section.dataset.chapter || "01";
+    const nextName = section.dataset.chapterName || "Abertura";
+    if (chapterNumber.textContent === nextNumber) return;
+
+    chapterRail.classList.add("is-switching");
+    window.setTimeout(() => {
+      chapterNumber.textContent = nextNumber;
+      chapterName.textContent = nextName;
+      chapterRail.dataset.tone = section.dataset.tone || "light";
+      chapterRail.classList.remove("is-switching");
+    }, 150);
+  };
+
+  if (chapters.length && "IntersectionObserver" in window) {
+    const chapterObserver = new IntersectionObserver((entries) => {
+      const visible = entries
+        .filter((entry) => entry.isIntersecting)
+        .sort((a, b) => b.intersectionRatio - a.intersectionRatio);
+      if (visible[0]) setCurrentChapter(visible[0].target);
+    }, { rootMargin: "-42% 0px -42% 0px", threshold: [0, 0.15, 0.35, 0.6] });
+    chapters.forEach((section) => chapterObserver.observe(section));
   }
 
   // Linha da jornada avança quando a seção entra em cena.
