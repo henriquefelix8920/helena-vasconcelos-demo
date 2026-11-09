@@ -127,9 +127,26 @@
     video.addEventListener("error", restoreFallback);
     video.addEventListener("abort", restoreFallback);
 
+    const playButton = frame?.querySelector("[data-video-play]");
+    const attemptPlayback = () => {
+      video.play().then(revealVideo).catch(() => restoreFallback());
+    };
+    const loadAndPlay = () => {
+      frame?.classList.remove("media-video-paused", "media-video-error");
+      if (video.readyState === 0) {
+        video.preload = "auto";
+        video.load();
+      }
+      if (video.readyState >= 2) attemptPlayback();
+      else video.addEventListener("canplay", attemptPlayback, { once: true });
+    };
+
+    // Se autoplay for bloqueado (ou houver movimento reduzido), ofereça reprodução manual.
+    if (playButton) playButton.addEventListener("click", loadAndPlay);
+
     if (prefersReducedMotion) {
-      // Com movimento reduzido, a imagem de poster permanece estática.
       video.pause();
+      frame?.classList.add("media-video-paused");
       return;
     }
 
@@ -138,9 +155,6 @@
         video.preload = "auto";
         video.load();
       }
-      const attemptPlayback = () => {
-        video.play().then(revealVideo).catch(() => restoreFallback());
-      };
       if (video.readyState >= 2) attemptPlayback();
       else video.addEventListener("canplay", attemptPlayback, { once: true });
     };
