@@ -122,7 +122,7 @@
     video.muted = true;
     video.defaultMuted = true;
     video.playsInline = true;
-    video.addEventListener("loadeddata", revealVideo, { once: true });
+    // Só troca o poster pelo vídeo quando a reprodução realmente começar.
     video.addEventListener("playing", revealVideo);
     video.addEventListener("error", restoreFallback);
     video.addEventListener("abort", restoreFallback);
