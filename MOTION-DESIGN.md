@@ -42,3 +42,18 @@ Os arquivos HTML, CSS e JavaScript foram consultados no GitHub. O JavaScript pas
 - O arquivo `hero-portrait.png` duplicado na raiz do repositório foi removido. A cópia canônica em `assets/images/hero-portrait.png` permanece.
 - O carregamento de vídeo foi alterado para iniciar apenas próximo da viewport; ao falhar, a imagem/poster continua como fallback. Com `prefers-reduced-motion`, o vídeo permanece estático para respeitar a preferência do usuário.
 - Os nomes e URLs foram verificados, mas ainda não houve inspeção visual em aparelhos físicos; a causa específica de eventuais falhas vistas no Chromebook ainda não está confirmada.
+
+
+## Atualização — capítulos navegáveis e transições de atmosfera
+
+- O indicador lateral agora contém nove marcadores clicáveis; cada marcador leva diretamente ao capítulo correspondente.
+- O capítulo ativo é identificado com `aria-current="step"`, inclusive para navegação assistiva.
+- O cabeçalho fixo muda entre atmosfera clara e escura conforme `data-tone` do capítulo ativo, mantendo contraste com o conteúdo.
+- O indicador de capítulo continua atualizando número e título com uma transição curta; o visitante mantém o controle da rolagem.
+
+## Atualização — reprodução de vídeo mais robusta
+
+- Se o navegador bloquear autoplay ou o vídeo falhar, o poster/fallback permanece visível.
+- Um botão acessível "Reproduzir cena" aparece para permitir tentativa manual.
+- Se o usuário tiver preferência de movimento reduzido, o vídeo começa pausado, mas a reprodução manual continua disponível.
+- Se uma primeira tentativa falhar e uma tentativa posterior funcionar, o estado de erro é removido para que o vídeo possa aparecer.
